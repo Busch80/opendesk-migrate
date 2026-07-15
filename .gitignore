@@ -76,3 +76,6 @@ playwright-report/
 *.bak
 *.backup
 *.dump
+
+# GitHub Actions workflows — excluded pending workflow-scope PAT
+.github/workflows/
