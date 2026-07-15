@@ -1,0 +1,79 @@
+{
+  "app": {
+    "name": "opendesk-migrate",
+    "tagline": "M365 → openDesk Migration"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "tenants": "Tenants",
+    "jobs": "Jobs",
+    "audit": "Audit log",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Overview",
+    "active_tenants": "Active tenants",
+    "running_jobs": "Running jobs",
+    "errors_24h": "Errors (24h)",
+    "throughput": "Throughput"
+  },
+  "tenants": {
+    "title": "Tenants",
+    "new": "New tenant",
+    "code": "Code",
+    "name": "Name",
+    "status": "Status",
+    "created": "Created",
+    "actions": "Actions",
+    "form": {
+      "code": "Tenant code",
+      "name": "Display name",
+      "opendesk_url": "openDesk URL",
+      "m365_tenant_id": "M365 Tenant ID",
+      "m365_client_id": "M365 Client ID",
+      "m365_client_secret": "M365 Client Secret",
+      "save": "Save"
+    }
+  },
+  "tenant_detail": {
+    "title": "Tenant",
+    "users": "Users",
+    "add_user": "Add user",
+    "upn": "UPN",
+    "display_name": "Display name",
+    "actions": "Actions",
+    "start_migration": "Start migration"
+  },
+  "jobs": {
+    "title": "Migration jobs",
+    "type": "Type",
+    "phase": "Phase",
+    "progress": "Progress",
+    "errors": "Errors",
+    "started": "Started",
+    "finished": "Finished"
+  },
+  "audit": {
+    "title": "Audit log",
+    "timestamp": "Timestamp",
+    "actor": "Actor",
+    "action": "Action",
+    "target": "Target"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "storage": "Staging volume",
+    "version": "Version"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "retry": "Retry",
+    "yes": "Yes",
+    "no": "No"
+  }
+}

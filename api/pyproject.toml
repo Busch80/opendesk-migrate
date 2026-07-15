@@ -1,0 +1,166 @@
+[project]
+name = "opendesk-migrate-api"
+version = "0.1.0"
+description = "Multi-tenant M365 → openDesk migration tool — API + Workers"
+authors = [{ name = "KPX AG", email = "[email protected]" }]
+license = { text = "AGPL-3.0-or-later" }
+readme = "README.md"
+requires-python = ">=3.12"
+keywords = ["openDesk", "M365", "migration", "Mail", "Calendar", "OneDrive", "Nextcloud", "OX App Suite"]
+
+dependencies = [
+    # Web framework
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.34.0",
+    "python-multipart==0.0.20",
+
+    # Database
+    "sqlalchemy[asyncio]==2.0.36",
+    "asyncpg==0.30.0",
+    "alembic==1.14.0",
+    "psycopg2-binary==2.9.10",  # Alembic sync driver
+
+    # Validation / Settings
+    "pydantic==2.10.4",
+    "pydantic-settings==2.7.1",
+    "python-dotenv==1.0.1",
+
+    # Async / HTTP
+    "httpx==0.28.1",
+    "aiohttp==3.11.11",
+    "anyio==4.7.0",
+    "tenacity==9.0.0",
+
+    # Task queue
+    "celery[redis]==5.4.0",
+    "redis==5.2.1",
+    "kombu==5.4.2",
+
+    # Auth / OAuth
+    "msal==1.32.0",
+    "python-jose[cryptography]==3.3.0",
+    "passlib[bcrypt]==1.7.4",
+
+    # Email handling
+    "flanker==0.9.0",
+    "mail-parser==6.0.0",
+    "email-validator==2.2.0",
+
+    # Calendar / Contacts
+    "icalendar==6.1.0",
+    "vobject==0.9.9",
+
+    # WebDAV / Nextcloud
+    "webdavclient3==1.0.0b2",
+    "aiohttp-webdav==0.2.1",
+
+    # IMAP (OX/Dovecot)
+    "aioimaplib==2.1.1",
+
+    # Encryption
+    "cryptography==44.0.0",
+    "pyjwt[crypto]==2.10.1",
+
+    # EWS / fallback
+    "zeep==4.3.2",  # OX SOAP client (oxadmin)
+
+    # Templating
+    "jinja2==3.1.5",
+
+    # Logging / Observability
+    "structlog==25.1.0",
+    "prometheus-client==0.21.1",
+    "prometheus-fastapi-instrumentator==7.0.0",
+
+    # i18n
+    "babel==2.17.0",
+
+    # Utilities
+    "click==8.1.8",
+    "rich==13.9.4",
+    "pyyaml==6.0.2",
+    "orjson==3.10.12",
+    "python-slugify==8.0.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+    "pytest-asyncio==0.25.2",
+    "pytest-cov==6.0.0",
+    "ruff==0.8.6",
+    "mypy==1.14.0",
+    "types-cryptography==44.0.0.20250101",
+    "freezegun==1.5.1",
+    "responses==0.25.3",
+    "respx==0.22.0",
+    "wiremock==2.6.1",
+    "fakeredis==2.27.0",
+    "pytest-mock==3.14.0",
+    "httpx[http2]==0.28.1",
+]
+
+[project.scripts]
+odmig-cli = "app.cli:cli"
+odmig-generate-fernet = "app.services.encryption.cli:main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+src = ["app", "tests"]
+extend-exclude = ["alembic/versions", "build", "dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "B", "UP", "ASYNC", "S", "RUF"]
+ignore = [
+    "E501",  # line-length handled by formatter
+    "S101",  # use of assert
+    "S104",  # binding all interfaces (0.0.0.0) — intentional in containers
+    "B008",  # function call in defaults — used for FastAPI/Pydantic
+    "RUF012",  # mutable class attributes — Pydantic pattern
+]
+unfixable = ["B"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S", "N"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+files = ["app", "tests"]
+
+[[tool.mypy.overrides]]
+module = ["flanker.*", "vobject.*", "icalendar.*", "wiremock.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+asyncio_mode = "auto"
+testpaths = ["tests", "app/tests"]
+addopts = "-ra --strict-markers --strict-config"
+markers = [
+    "unit: pure unit tests (fast, no IO)",
+    "integration: requires fakes/mocks for external services",
+    "e2e: end-to-end tests",
+    "slow: slow tests (>1s)",
+]
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["app"]
+omit = ["app/tests/*", "app/cli.py", "app/main.py"]
+
+[tool.coverage.report]
+fail_under = 70
+show_missing = true
+skip_covered = false

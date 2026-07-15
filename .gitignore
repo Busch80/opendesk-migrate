@@ -1,0 +1,78 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.lock
+!.python-version
+!/.venv/
+venv/
+.venv/
+env/
+
+# Node
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+dist/
+.vite/
+.cache/
+.parcel-cache/
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+secrets/
+
+# Data
+*.db
+*.sqlite
+*.sqlite3
+postgres_data/
+redis_data/
+local_staging/
+odmig_staging/
+.next/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# Test
+coverage/
+test-results/
+playwright-report/
+
+# Backups
+*.bak
+*.backup
+*.dump

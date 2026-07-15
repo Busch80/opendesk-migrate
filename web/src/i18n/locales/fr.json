@@ -1,0 +1,79 @@
+{
+  "app": {
+    "name": "opendesk-migrate",
+    "tagline": "Migration M365 → openDesk"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "tenants": "Mandants",
+    "jobs": "Tâches",
+    "audit": "Journal d'audit",
+    "settings": "Paramètres"
+  },
+  "dashboard": {
+    "title": "Vue d'ensemble",
+    "active_tenants": "Mandants actifs",
+    "running_jobs": "Tâches en cours",
+    "errors_24h": "Erreurs (24h)",
+    "throughput": "Débit"
+  },
+  "tenants": {
+    "title": "Mandants",
+    "new": "Nouveau mandant",
+    "code": "Code",
+    "name": "Nom",
+    "status": "Statut",
+    "created": "Créé",
+    "actions": "Actions",
+    "form": {
+      "code": "Code du mandant",
+      "name": "Nom affiché",
+      "opendesk_url": "URL openDesk",
+      "m365_tenant_id": "ID locataire M365",
+      "m365_client_id": "ID client M365",
+      "m365_client_secret": "Secret client M365",
+      "save": "Enregistrer"
+    }
+  },
+  "tenant_detail": {
+    "title": "Mandant",
+    "users": "Utilisateurs",
+    "add_user": "Ajouter un utilisateur",
+    "upn": "UPN",
+    "display_name": "Nom affiché",
+    "actions": "Actions",
+    "start_migration": "Démarrer la migration"
+  },
+  "jobs": {
+    "title": "Tâches de migration",
+    "type": "Type",
+    "phase": "Phase",
+    "progress": "Progression",
+    "errors": "Erreurs",
+    "started": "Démarré",
+    "finished": "Terminé"
+  },
+  "audit": {
+    "title": "Journal d'audit",
+    "timestamp": "Date",
+    "actor": "Acteur",
+    "action": "Action",
+    "target": "Cible"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "storage": "Stockage intermédiaire",
+    "version": "Version"
+  },
+  "common": {
+    "loading": "Chargement…",
+    "error": "Erreur",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "retry": "Réessayer",
+    "yes": "Oui",
+    "no": "Non"
+  }
+}

@@ -1,0 +1,50 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths: ["web/**", ".github/workflows/frontend.yml"]
+  pull_request:
+    branches: [main, develop]
+
+defaults:
+  run:
+    working-directory: web
+
+jobs:
+  lint-build:
+    name: Lint, Type-check, Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run type-check
+
+      - name: Build
+        env:
+          VITE_API_URL: "/"
+        run: npm run build
+
+  test:
+    name: Unit + Component Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - run: npm ci
+      - run: npm test
