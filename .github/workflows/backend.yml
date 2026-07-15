@@ -1,0 +1,83 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths: ["api/**", ".github/workflows/backend.yml"]
+  pull_request:
+    branches: [main, develop]
+
+defaults:
+  run:
+    working-directory: api
+
+jobs:
+  lint:
+    name: Lint & Type-check
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: odmig_test
+          POSTGRES_USER: odmig
+          POSTGRES_PASSWORD: odmig
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff mypy pytest pytest-asyncio pytest-cov
+
+      - name: Ruff
+        run: ruff check .
+
+      - name: Ruff format check
+        run: ruff format --check .
+
+      - name: MyPy
+        run: mypy app
+        env:
+          MYPY_DRY_RUN: 1
+
+      - name: Setup test env
+        run: |
+          cp .env.example .env
+          sed -i 's|postgresql+asyncpg://odmig:odmig@localhost:5432/odmig|postgresql+asyncpg://odmig:odmig@localhost:5432/odmig_test|' .env
+          # Generate test Fernet key
+          echo "FERNET_KEY=$(python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())')" >> .env
+          echo "SECRET_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(48))')" >> .env
+
+      - name: Pytest
+        run: |
+          DATABASE_URL=postgresql+asyncpg://odmig:odmig@localhost:5432/odmig_test \
+            REDIS_URL=redis://localhost:6379/0 \
+            pytest --cov=app --cov-report=xml --cov-report=term
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./api/coverage.xml
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
