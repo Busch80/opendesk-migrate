@@ -117,6 +117,23 @@ make logs          # tail logs
 make seed          # create demo tenant + users
 ```
 
+## CI / GitHub Actions
+
+Three workflow files are pre-configured under `.github/workflows/`:
+
+- `backend.yml` — ruff, mypy, pytest with Postgres + Redis services
+- `frontend.yml` — eslint, tsc, vite build, vitest
+- `docker.yml` — image build & push to ghcr.io on `main` and tags
+
+To activate CI, your repository admin must grant the `workflow` OAuth
+scope to the GitHub PAT used by the deploy tool. Until then, workflows
+exist locally but are not uploaded to GitHub.
+
+```
+# Once granted the scope, push them with:
+git push origin HEAD:main
+```
+
 ## Documentation
 
 | Doc | Purpose |
