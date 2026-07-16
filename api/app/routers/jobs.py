@@ -5,7 +5,6 @@ from __future__ import annotations
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -105,8 +104,8 @@ async def retry_job(job_id: UUID, _payload: JobRetry, session: AsyncSession = De
     return JobRead.model_validate(job)
 
 
-@router.post("/{job_id}/cancel", status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
-async def cancel_job(job_id: UUID, session: AsyncSession = Depends(db_session_dep)) -> Response:
+@router.post("/{job_id}/cancel", status_code=status.HTTP_200_OK)
+async def cancel_job(job_id: UUID, session: AsyncSession = Depends(db_session_dep)) -> dict:
     res = await session.execute(select(MigrationJob).where(MigrationJob.id == str(job_id)))
     job = res.scalar_one_or_none()
     if job is None:
@@ -114,4 +113,4 @@ async def cancel_job(job_id: UUID, session: AsyncSession = Depends(db_session_de
     job.phase = JobPhase.CANCELLED
     session.add(AuditLog(tenant_id=job.tenant_id, actor="system", action="job.cancel", target=str(job_id)))
     await session.commit()
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    return {"resolved": True}

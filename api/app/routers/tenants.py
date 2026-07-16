@@ -5,7 +5,6 @@ from __future__ import annotations
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import Response
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -113,7 +112,7 @@ async def update_tenant(
     return TenantRead.model_validate(tenant)
 
 
-@router.post("/{tenant_id}/rotate-secrets", status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
+@router.post("/{tenant_id}/rotate-secrets", status_code=status.HTTP_200_OK)
 async def rotate_secrets(tenant_id: UUID, payload: SecretsRotate, session: AsyncSession = Depends(db_session_dep)) -> None:
     """Re-encrypt specific secrets with the same Fernet key.
 
@@ -144,4 +143,4 @@ async def rotate_secrets(tenant_id: UUID, payload: SecretsRotate, session: Async
     secrets.rotated_at = datetime.now(tz=timezone.utc)
     session.add(AuditLog(tenant_id=str(tenant_id), actor="system", action="secrets.rotate", target=str(tenant_id)))
     await session.commit()
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    return {"resolved": True}
