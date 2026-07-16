@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from app.celery import celery
+from app.celery_init import celery
 from app.logging import get_logger
 
 logger = get_logger(__name__)

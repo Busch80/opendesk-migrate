@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from app.celery import celery
+from app.celery_init import celery
 
 
 @celery.task(name="app.tasks.onedrive.migrate_full")
