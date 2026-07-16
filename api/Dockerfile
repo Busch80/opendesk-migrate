@@ -56,7 +56,7 @@ COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy source
-COPY api/README.md ./README.md 2>/dev/null || true
+COPY api/README.md ./README.md
 COPY api/app ./app
 COPY api/alembic ./alembic
 COPY api/alembic.ini ./alembic.ini
