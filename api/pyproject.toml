@@ -50,8 +50,7 @@ dependencies = [
     "vobject==0.9.9",
 
     # WebDAV / Nextcloud
-    "webdavclient3>=3.14.6",
-    "aiohttp-webdav==0.2.1",
+
 
     # IMAP (OX/Dovecot)
     "aioimaplib==2.1.1",
