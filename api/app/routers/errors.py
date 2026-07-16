@@ -29,9 +29,10 @@ async def list_errors(
     return [ErrorRead.model_validate(e) for e in res.scalars()]
 
 
-@router.post("/{error_id}/resolve", status_code=status.HTTP_204_NO_CONTENT)
+@router.post("/{error_id}/resolve", status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
 async def resolve_error(error_id: int, session: AsyncSession = Depends(db_session_dep)) -> None:
     from sqlalchemy import update
 
     await session.execute(update(Error).where(Error.id == error_id).values(resolved=True))
     await session.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

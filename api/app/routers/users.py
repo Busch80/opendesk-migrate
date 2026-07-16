@@ -5,6 +5,7 @@ from __future__ import annotations
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -94,10 +95,10 @@ async def get_user(
     return UserRead.model_validate(user)
 
 
-@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
 async def delete_user(
     tenant_id: UUID, user_id: UUID, session: AsyncSession = Depends(db_session_dep)
-) -> None:
+) -> Response:
     res = await session.execute(
         select(UserM365).where(UserM365.id == str(user_id), UserM365.tenant_id == str(tenant_id))
     )
@@ -107,3 +108,4 @@ async def delete_user(
     await session.delete(user)
     session.add(AuditLog(tenant_id=str(tenant_id), actor="system", action="user.delete", target=user.m365_upn))
     await session.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
