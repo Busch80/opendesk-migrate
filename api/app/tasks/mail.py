@@ -8,7 +8,7 @@ from typing import Any
 
 from sqlalchemy import select, update
 
-from app.celery import celery
+from app.celery_init import celery
 from app.db import session_scope
 from app.logging import get_logger
 from app.models import JobPhase, JobType, MigrationJob
