@@ -27,9 +27,9 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 WORKDIR /app
 
 # Install dependencies first (cache-friendly)
-COPY pyproject.toml ./
-COPY alembic ./alembic
-COPY alembic.ini ./
+COPY api/pyproject.toml ./pyproject.toml
+COPY api/alembic ./alembic
+COPY api/alembic.ini ./alembic.ini
 
 RUN uv pip install --system --no-cache . 2>&1 | tail -30 || true
 
