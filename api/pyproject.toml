@@ -43,7 +43,6 @@ dependencies = [
 
     # Email handling
     "flanker==0.9.0",
-    "mail-parser==6.0.0",
     "email-validator==2.2.0",
 
     # Calendar / Contacts
