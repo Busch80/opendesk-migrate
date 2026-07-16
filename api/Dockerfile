@@ -27,11 +27,12 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 WORKDIR /app
 
 # Install dependencies first (cache-friendly)
-COPY api/pyproject.toml ./pyproject.toml
+COPY api/requirements.txt ./requirements.txt
 COPY api/alembic ./alembic
 COPY api/alembic.ini ./alembic.ini
+COPY api/app ./app
 
-RUN uv pip install --system --no-cache . 2>&1 | tail -30 || true
+RUN uv pip install --system --no-cache -r requirements.txt 2>&1 | tail -30 || true
 
 # Production image ----------------------------------------------------
 FROM python:3.12-slim
@@ -55,7 +56,10 @@ COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy source
-COPY . /app
+COPY api/README.md ./README.md 2>/dev/null || true
+COPY api/app ./app
+COPY api/alembic ./alembic
+COPY api/alembic.ini ./alembic.ini
 
 RUN mkdir -p /staging && chown -R odmig:odmig /app /staging
 

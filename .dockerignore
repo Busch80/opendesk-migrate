@@ -1,0 +1,10 @@
+.git
+.github
+ops
+docs
+tests
+scripts
+workers
+web
+.*  # No hidden files
+*.md  # except in api which is OK
